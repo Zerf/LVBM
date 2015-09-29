@@ -136,7 +136,9 @@ LVBM.AddOns.Nefarian = {
 				LVBM.StartStatusBarTimer(1.5, "Fear Cast");
 			end
 		elseif event == "CHAT_MSG_MONSTER_YELL" then
-			if arg1 == LVBM_NEFARIAN_YELL_PHASE2 then
+			if arg1 == LVBM_NEFARIAN_YELL_PHASE1 then
+				LVBM.StartStatusBarTimer(100, "Nefarian landing");
+			elseif arg1 == LVBM_NEFARIAN_YELL_PHASE2 then
 				LVBM.Announce(LVBM_NEFARIAN_PHASE2_WARNING);
 				LVBM.StartStatusBarTimer(15, "Phase 2");
 			elseif arg1 == LVBM_NEFARIAN_YELL_PHASE3 then
