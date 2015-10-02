@@ -1,5 +1,3 @@
-
-
 LVBM.AddOns.Nefarian = {
 	["Name"] = LVBM_NEFARIAN_NAME,
 	["Abbreviation1"] = "nef",
@@ -33,23 +31,8 @@ LVBM.AddOns.Nefarian = {
 			["func"] = function() LVBM.AddOns.Nefarian.Options.SyncKills = not LVBM.AddOns.Nefarian.Options.SyncKills; end,
 		},
 	},
-	["LocalDrakonids"] = { 
-		[1] = 0, 
-		[2] = 0, 
-		[3] = 0, 
-		[4] = 0, 
-		[5] = 0, 
-		[6] = 0, 
-	},
-	["TempDrakonids"] = { 
-		[1] = 0, 
-		[2] = 0, 
-		[3] = 0, 
-		[4] = 0, 
-		[5] = 0, 
-		[6] = 0, 
-	},
-	["SideColor"] = 0,
+	["DrakonidsTotal"] = 42,
+	["DrakonidKillCount"] = 0,
 	["LastCountMsg"] = 0,
 	["PriestCall"] = false,
 	["BowBag"]	= 0,
@@ -62,68 +45,26 @@ LVBM.AddOns.Nefarian = {
 		["CHAT_MSG_COMBAT_HOSTILE_DEATH"] = true,
 	},
 	["OnCombatStart"] = function(delay)
-		for i=1, 6, 1 do
-			LVBM.AddOns.Nefarian.LocalDrakonids[i] = 0;
-			LVBM.AddOns.Nefarian.TempDrakonids[i] = 0;
-		end
+		LVBM.AddOns.Nefarian.DrakonidKillCount = 0;
 	end,
 	["OnCombatEnd"] = function()
-		for i=1, 6, 1 do
-			LVBM.AddOns.Nefarian.LocalDrakonids[i] = 0;
-			LVBM.AddOns.Nefarian.TempDrakonids[i] = 0;
-		end
-		LVBM.AddOns.Nefarian.SideColor = 0;
-		LVBM.AddOns.Nefarian.LastCountMsg = 0;
+		LVBM.AddOns.Nefarian.DrakonidKillCount = 0;
 	end,
 	["OnEvent"] = function(event, arg1)
-
-		-- LVBM.AddOns.Nefarian.OnEvent("CHAT_MSG_COMBAT_HOSTILE_DEATH", "Bronze Drakonid dies.");
-		-- LVBM.AddOns.Nefarian.OnEvent("CHAT_MSG_ADDON", "LVNEF KILL", "Side: 3 Color: 4 Count: 2")
-
-		if LVBM.AddOns.Nefarian.Options.SyncKills and event == "CHAT_MSG_ADDON" and arg1 == "LVNEF KILL" and arg2 and arg3 == "RAID" then
-			local _, _, mindex, mcolor, mcount = string.find(arg2, "Side: (%d+) Color: (%d+) Count: (%d+)");
-			mindex = tonumber(mindex);
-			mcolor = tonumber(mcolor);
-			mcount = tonumber(mcount);
-			if( mindex and mcolor and mcount ) then
-				if( LVBM.AddOns.Nefarian.SideColor ~= mindex ) then	-- Save outdated stats
-					if( LVBM.AddOns.Nefarian.TempDrakonids[mcolor] < mcount ) then
-						LVBM.AddOns.Nefarian.TempDrakonids[mcolor] = mcount;
-					end
-				else	-- Update Local Stats
-					if( LVBM.AddOns.Nefarian.LocalDrakonids[mcolor] < mcount ) then
-						LVBM.AddOns.Nefarian.LocalDrakonids[mcolor] = mcount;
-					end
+		if LVBM.AddOns.Nefarian.Options.SyncKills and event == "CHAT_MSG_ADDON" and arg1 == "LVBM_NEF_P1_KILLCOUNT" and arg2 and arg3 == "RAID" then
+			local killcount = tonumber(arg2);
+			if ( killcount and killcount > LVBM.AddOns.Nefarian.DrakonidKillCount ) then
+				LVBM.AddOns.Nefarian.DrakonidKillCount = killcount;
+			end
+		elseif event == "CHAT_MSG_COMBAT_HOSTILE_DEATH" then
+			if string.find(arg1, "Drakonid") then
+				LVBM.AddOns.Nefarian.DrakonidKillCount = LVBM.AddOns.Nefarian.DrakonidKillCount + 1;
+				if(LVBM.AddOns.Nefarian.Options.SyncKills) then
+					SendAddonMessage("LVBM_NEF_P1_KILLCOUNT", LVBM.AddOns.Nefarian.DrakonidKillCount);
 				end
-			end
-			local count = 0;
-			for index, value in pairs(LVBM.AddOns.Nefarian.LocalDrakonids) do count = count + value; end
-			for index, value in pairs(LVBM.AddOns.Nefarian.TempDrakonids) do count = count + value; end
-
-			if( count > 3 and (time() - LVBM.AddOns.Nefarian.LastCountMsg) > 10 ) then
-				LVBM.AddOns.Nefarian.LastCountMsg = time();
-				LVBM.Announce( string.format(LVBM_NEFARIAN_SYNCKILLS_ANNOUNCE, count) );
-			end
-
-		elseif LVBM.AddOns.Nefarian.Options.SyncKills and event == "CHAT_MSG_COMBAT_HOSTILE_DEATH" then
-			for index, value in pairs(LVBM_NEFARIAN_DRAKONID_DOWN) do
-				if( value == arg1 ) then
-					LVBM.AddOns.Nefarian.LocalDrakonids[index] = LVBM.AddOns.Nefarian.LocalDrakonids[index] + 1;
-					-- LVBM.AddMsg("Found kill from Index #"..index.." - "..arg1);
-				end
-			end
-			local Hindex = 0;
-			local Hvalue = 0;
-			for index, value in pairs(LVBM.AddOns.Nefarian.LocalDrakonids) do
-				if( Hvalue < value ) then 
-					Hvalue = value;
-					Hindex = index;
-				end
-			end
-			if( Hvalue > 3 ) then
-				LVBM.AddOns.Nefarian.SideColor = Hindex;
-				for index, value in pairs(LVBM.AddOns.Nefarian.LocalDrakonids) do
-					SendAddonMessage("LVNEF KILL", "Side: "..Hindex.." Color: "..index.." Count: "..value, "RAID");
+				
+				if (math.mod(LVBM.AddOns.Nefarian.DrakonidKillCount,5) == 0) then
+					LVBM.AddMsg( string.format("*** %d Drakonids down ***", LVBM.AddOns.Nefarian.DrakonidKillCount) );
 				end
 			end
 
@@ -136,9 +77,7 @@ LVBM.AddOns.Nefarian = {
 				LVBM.StartStatusBarTimer(1.5, "Fear Cast");
 			end
 		elseif event == "CHAT_MSG_MONSTER_YELL" then
-			if arg1 == LVBM_NEFARIAN_YELL_PHASE1 then
-				LVBM.StartStatusBarTimer(100, "Nefarian landing");
-			elseif arg1 == LVBM_NEFARIAN_YELL_PHASE2 then
+			if arg1 == LVBM_NEFARIAN_YELL_PHASE2 then
 				LVBM.Announce(LVBM_NEFARIAN_PHASE2_WARNING);
 				LVBM.StartStatusBarTimer(15, "Phase 2");
 			elseif arg1 == LVBM_NEFARIAN_YELL_PHASE3 then
