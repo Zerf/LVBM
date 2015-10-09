@@ -82,25 +82,25 @@ LVBM.AddOns.Nefarian = {
 				LVBM.StartStatusBarTimer(15, "Phase 2");
 			elseif arg1 == LVBM_NEFARIAN_YELL_PHASE3 then
 				LVBM.Announce(LVBM_NEFARIAN_PHASE3_WARNING);
-			elseif (string.find(arg1, LVBM_NEFARIAN_YELL_SHAMANS)) then
+			elseif string.find(arg1, "Shamans") then
 				LVBM.Announce(LVBM_NEFARIAN_SHAMAN_WARNING);
 				LVBM.Schedule(27, "LVBM.AddOns.Nefarian.OnEvent", "ClassCallWarning", 5)
 				LVBM.EndStatusBarTimer("Class call CD");
-				LVBM.StartStatusBarTimer(30, "Class call CD");
+				LVBM.StartStatusBarTimer(30, "Shaman call");
 				LVBM.AddOns.Nefarian.OnEvent("EquipBow");
-			elseif arg1 == LVBM_NEFARIAN_YELL_PALAS then
+			elseif string.find(arg1, "Paladins") then
 				LVBM.Announce(LVBM_NEFARIAN_PALA_WARNING);
 				LVBM.Schedule(27, "LVBM.AddOns.Nefarian.OnEvent", "ClassCallWarning", 5)
 				LVBM.EndStatusBarTimer("Class call CD");
-				LVBM.StartStatusBarTimer(30, "Class call CD");
+				LVBM.StartStatusBarTimer(30, "Paladin call");
 				LVBM.AddOns.Nefarian.OnEvent("EquipBow");
-			elseif arg1 == LVBM_NEFARIAN_YELL_DRUIDS then
+			elseif string.find(arg1, "Druids") then
 				LVBM.Announce(LVBM_NEFARIAN_DRUID_WARNING);
 				LVBM.Schedule(27, "LVBM.AddOns.Nefarian.OnEvent", "ClassCallWarning", 5)
 				LVBM.EndStatusBarTimer("Class call CD");
 				LVBM.StartStatusBarTimer(30, "Druid call");
 				LVBM.AddOns.Nefarian.OnEvent("EquipBow");
-			elseif arg1 == LVBM_NEFARIAN_YELL_PRIESTS then
+			elseif string.find(arg1, "Priests") then
 				if UnitClass("player") == LVBM_PRIEST then
 					LVBM.AddSpecialWarning(LVBM_NEFARIAN_PRIEST_CALL, true, true);
 					LVBM.AddOns.Nefarian.PriestCall = 30;
@@ -111,31 +111,31 @@ LVBM.AddOns.Nefarian = {
 				LVBM.EndStatusBarTimer("Class call CD");
 				LVBM.StartStatusBarTimer(30, "Priest call");
 				LVBM.AddOns.Nefarian.OnEvent("EquipBow");
-			elseif arg1 == LVBM_NEFARIAN_YELL_WARRIORS then
+			elseif string.find(arg1, "Warriors") then
 				LVBM.Announce(LVBM_NEFARIAN_WARRIOR_WARNING);
 				LVBM.Schedule(27, "LVBM.AddOns.Nefarian.OnEvent", "ClassCallWarning", 5)
 				LVBM.EndStatusBarTimer("Class call CD");
 				LVBM.StartStatusBarTimer(30, "Warrior call");
 				LVBM.AddOns.Nefarian.OnEvent("EquipBow");
-			elseif arg1 == LVBM_NEFARIAN_YELL_ROGUES then
+			elseif string.find(arg1, "Rogues") then
 				LVBM.Announce(LVBM_NEFARIAN_ROGUE_WARNING);
 				LVBM.Schedule(27, "LVBM.AddOns.Nefarian.OnEvent", "ClassCallWarning", 5)
 				LVBM.EndStatusBarTimer("Class call CD");
 				LVBM.StartStatusBarTimer(30, "Rogue call");
 				LVBM.AddOns.Nefarian.OnEvent("EquipBow");
-			elseif arg1 == LVBM_NEFARIAN_YELL_WARLOCKS then
+			elseif string.find(arg1, "Warlocks") then
 				LVBM.Announce(LVBM_NEFARIAN_WARLOCK_WARNING);
 				LVBM.Schedule(27, "LVBM.AddOns.Nefarian.OnEvent", "ClassCallWarning", 5)
 				LVBM.EndStatusBarTimer("Class call CD");
-				LVBM.StartStatusBarTimer(30, "Class call CD");
+				LVBM.StartStatusBarTimer(30, "Warlock call");
 				LVBM.AddOns.Nefarian.OnEvent("EquipBow");
-			elseif arg1 == LVBM_NEFARIAN_YELL_HUNTERS then
+			elseif string.find(arg1, "Hunters") then
 				LVBM.Announce(LVBM_NEFARIAN_HUNTER_WARNING);
 				LVBM.Schedule(27, "LVBM.AddOns.Nefarian.OnEvent", "ClassCallWarning", 5)
 				LVBM.EndStatusBarTimer("Class call CD");
-				LVBM.StartStatusBarTimer(30, "Class call CD");
+				LVBM.StartStatusBarTimer(30, "Hunter call");
 				LVBM.AddOns.Nefarian.OnEvent("EquipBow");
-			elseif arg1 == LVBM_NEFARIAN_YELL_MAGES then
+			elseif string.find(arg1, "Mages") then
 				LVBM.Announce(LVBM_NEFARIAN_MAGE_WARNING);
 				LVBM.Schedule(27, "LVBM.AddOns.Nefarian.OnEvent", "ClassCallWarning", 5)
 				LVBM.EndStatusBarTimer("Class call CD");
